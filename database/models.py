@@ -35,6 +35,7 @@ class Service(Base):
     name = Column(String(100), nullable=False)
     duration = Column(Integer, nullable=False)  # В минутах
     price = Column(Integer, nullable=False)     # В рублях
+    is_active = Column(Boolean, default=True)  # Флаг активности услуги
 
     # Связь с записями
     appointments = relationship("Appointment", back_populates="service")
