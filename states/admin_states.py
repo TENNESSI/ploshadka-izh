@@ -1,4 +1,4 @@
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.filters.state import State, StatesGroup
 
 class AdminStates(StatesGroup):
     """Базовые состояния админ-панели"""
@@ -10,6 +10,14 @@ class BarberManagementStates(StatesGroup):
     add_barber = State()
     edit_barber = State()
     delete_barber = State()
+
+class BarberAddStates(StatesGroup):
+    """Состояния для добавления барберов"""
+    waiting_for_name = State()
+    waiting_for_description = State()
+    waiting_for_photo = State()
+    waiting_for_confirmation = State()
+    waiting_for_deletion = State()
 
 class ServiceManagementStates(StatesGroup):
     """Состояния управления услугами"""

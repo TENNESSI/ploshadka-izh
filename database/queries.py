@@ -3,8 +3,13 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, date
 from typing import List, Optional, Dict, Tuple
 from database.models import Barber, Service, Schedule, Appointment
-from config import DB_PATH, WORK_START, WORK_END
+from config import config
 import logging
+
+
+DB_PATH = config.DB_PATH
+WORK_START = config.WORK_START
+WORK_END = config.WORK_END
 
 logger = logging.getLogger(__name__)
 

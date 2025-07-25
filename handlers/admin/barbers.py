@@ -1,23 +1,14 @@
 from aiogram import types, Dispatcher
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
 from database.models import Barber
 from database.db import Session
+from states import BarberAddStates
 from keyboards.admin import (
     barbers_keyboard,
     confirm_keyboard,
     cancel_keyboard
 )
 from utils.notifications import notify_admins
-
-
-class BarberStates(StatesGroup):
-    """FSM состояния для управления барберами"""
-    waiting_for_name = State()
-    waiting_for_description = State()
-    waiting_for_photo = State()
-    waiting_for_confirmation = State()
-    waiting_for_deletion = State()
 
 
 # Добавление нового барбера
@@ -27,7 +18,7 @@ async def add_barber_start(message: types.Message):
         "Введите имя нового барбера:",
         reply_markup=cancel_keyboard()
     )
-    await BarberStates.waiting_for_name.set()
+    await BarberAddStates.waiting_for_name.set()
 
 
 async def process_barber_name(message: types.Message, state: FSMContext):
@@ -35,7 +26,7 @@ async def process_barber_name(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['name'] = message.text
 
-    await BarberStates.next()
+    await BarberAddStates.next()
     await message.answer(
         "Введите описание барбера:",
         reply_markup=cancel_keyboard()
@@ -47,7 +38,7 @@ async def process_barber_description(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['description'] = message.text
 
-    await BarberStates.next()
+    await BarberAddStates.next()
     await message.answer(
         "Отправьте фото барбера:",
         reply_markup=cancel_keyboard()
@@ -70,7 +61,7 @@ async def process_barber_photo(message: types.Message, state: FSMContext):
             f"Описание: {data['description']}"
         )
 
-    await BarberStates.next()
+    await BarberAddStates.next()
     await message.answer_photo(
         photo=data['photo_id'],
         caption=confirm_message,
@@ -122,7 +113,7 @@ async def delete_barber_start(message: types.Message):
         "Выберите барбера для удаления:",
         reply_markup=keyboard
     )
-    await BarberStates.waiting_for_deletion.set()
+    await BarberAddStates.waiting_for_deletion.set()
 
 
 async def process_barber_deletion(message: types.Message, state: FSMContext):
@@ -195,22 +186,22 @@ def register_handlers(dp: Dispatcher):
     # FSM обработчики
     dp.register_message_handler(
         process_barber_name,
-        state=BarberStates.waiting_for_name
+        state=BarberAddStates.waiting_for_name
     )
     dp.register_message_handler(
         process_barber_description,
-        state=BarberStates.waiting_for_description
+        state=BarberAddStates.waiting_for_description
     )
     dp.register_message_handler(
         process_barber_photo,
         content_types=['photo'],
-        state=BarberStates.waiting_for_photo
+        state=BarberAddStates.waiting_for_photo
     )
     dp.register_message_handler(
         confirm_add_barber,
-        state=BarberStates.waiting_for_confirmation
+        state=BarberAddStates.waiting_for_confirmation
     )
     dp.register_message_handler(
         process_barber_deletion,
-        state=BarberStates.waiting_for_deletion
+        state=BarberAddStates.waiting_for_deletion
     )

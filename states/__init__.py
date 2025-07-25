@@ -3,7 +3,8 @@ from .admin_states import (
     AdminStates,
     BarberManagementStates,
     ServiceManagementStates,
-    ScheduleManagementStates
+    ScheduleManagementStates,
+    BarberAddStates
 )
 from .client_states import (
     ClientRegistrationStates,
@@ -22,7 +23,8 @@ __all__ = [
     'ClientRegistrationStates',
     'ServiceSelectionStates',
     'BarberSelectionStates',
-    'DateTimeSelectionStates'
+    'DateTimeSelectionStates',
+    'BarberAddStates'
 ]
 
 # Альтернативный вариант экспорта групп состояний
@@ -37,3 +39,4 @@ class AllStates:
     service_selection = ServiceSelectionStates
     barber_selection = BarberSelectionStates
     date_time_selection = DateTimeSelectionStates
+    barber_add = BarberAddStates

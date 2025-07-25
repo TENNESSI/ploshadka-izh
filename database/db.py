@@ -1,6 +1,7 @@
 from sqlite3 import connect, Connection
-from config import DB_PATH
+from config import config
 
+DB_PATH = config.DB_PATH
 
 def get_db() -> Connection:
     """Возвращает подключение к SQLite."""

@@ -1,8 +1,8 @@
 from aiogram import Bot
-from aiogram.types import Message, ParseMode
+from aiogram.types import Message, ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 from typing import List, Dict, Optional
-from config import ADMINS, TIMEZONE
+from config import config
 from database.models import Appointment, Barber
 import logging
 import pytz
@@ -72,7 +72,7 @@ async def send_reminder(
         appointment_datetime = datetime.strptime(
             f"{appointment.date} {time_part}",
             "%Y-%m-%d %H:%M"
-        ).replace(tzinfo=pytz.timezone(TIMEZONE))
+        ).replace(tzinfo=pytz.timezone(config.TIMEZONE))
 
         text = (
             "🔔 *Напоминание о записи*\n\n"
@@ -102,7 +102,7 @@ async def notify_admins(
         if not exclude_ids:
             exclude_ids = []
 
-        for admin_id in ADMINS:
+        for admin_id in config.ADMIN_IDS:
             if admin_id not in exclude_ids:
                 try:
                     await bot.send_message(
